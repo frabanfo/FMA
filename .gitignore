@@ -1,0 +1,10 @@
+# Ambiente virtuale
+.venv/
+# Cache Python
+__pycache__/
+*.pyc
+# Dati scaricati (rigenerabili con data_loader.py)
+data/cache/
+# Output dei notebook (opzionale: rimuovi se vuoi versionare i risultati)
+.ipynb_checkpoints/
+docs/

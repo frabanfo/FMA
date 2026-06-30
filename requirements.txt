@@ -1,0 +1,11 @@
+# Dynamic Asset Allocation - dipendenze
+# Versioni minime testate; per la riproducibilita' esatta si possono pinnare.
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10            # ottimizzatori (SLSQP), come nei notebook del corso
+scikit-learn>=1.3      # solo per LedoitWolf (covarianza shrinkage)
+yfinance>=0.2.40       # download prezzi ETF (Adj Close = total return)
+pandas-datareader>=0.10  # download risk-free da FRED
+pyarrow>=12.0          # cache dei dati in formato parquet
+matplotlib>=3.7        # grafici
+seaborn>=0.12          # heatmap correlazioni / stile grafici
