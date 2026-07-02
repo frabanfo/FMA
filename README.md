@@ -12,7 +12,7 @@ dynamic_asset_allocation/
 ├── data_loader.py     # download (yfinance/FRED), pulizia, rendimenti mensili, cache
 ├── estimators.py      # μ (media storica), Σ (sample / Ledoit-Wolf)        
 ├── optimizers.py      # min-var, max-Sharpe (scipy), resampling Michaud    
-├── backtest.py        # motore walk-forward (cuore del progetto)            [to do]
+├── backtest.py        # motore walk-forward (cuore del progetto)           
 ├── benchmarks.py      # 1/N, 60/40                                          [to do]
 ├── metrics.py         # equity, vol, max drawdown, Sharpe, Calmar, turnover [to do]
 ├── plotting.py        # grafici                                             [to do]
