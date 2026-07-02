@@ -13,7 +13,7 @@ dynamic_asset_allocation/
 ├── estimators.py      # μ (media storica), Σ (sample / Ledoit-Wolf)        
 ├── optimizers.py      # min-var, max-Sharpe (scipy), resampling Michaud    
 ├── backtest.py        # motore walk-forward (cuore del progetto)           
-├── benchmarks.py      # 1/N, 60/40                                          [to do]
+├── benchmarks.py      # 1/N, 60/40                                          
 ├── metrics.py         # equity, vol, max drawdown, Sharpe, Calmar, turnover [to do]
 ├── plotting.py        # grafici                                             [to do]
 ├── notebooks/         # 01_data, 02_optimizers_demo, 03_results (presentazione)
