@@ -11,7 +11,7 @@ dynamic_asset_allocation/
 ├── config.py          # TUTTE le scelte: universo, periodo, parametri, seed
 ├── data_loader.py     # download (yfinance/FRED), pulizia, rendimenti mensili, cache
 ├── estimators.py      # μ (media storica), Σ (sample / Ledoit-Wolf)        
-├── optimizers.py      # min-var, max-Sharpe (scipy), resampling Michaud     [to do]
+├── optimizers.py      # min-var, max-Sharpe (scipy), resampling Michaud    
 ├── backtest.py        # motore walk-forward (cuore del progetto)            [to do]
 ├── benchmarks.py      # 1/N, 60/40                                          [to do]
 ├── metrics.py         # equity, vol, max drawdown, Sharpe, Calmar, turnover [to do]
