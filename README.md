@@ -105,6 +105,33 @@ direct alternative to robust estimation.
 
 ---
 
+## Key results
+
+| | Ann. Return | Ann. Vol | Sharpe | Max DD | Jun 2026 | Avg HHI |
+|---|---|---|---|---|---|---|
+| Markowitz | 7.7% | 7.1% | 0.80 | −17.2% | −4.6% | 0.185 |
+| Michaud | 7.0% | 6.4% | 0.78 | −16.7% | −3.8% | 0.123 |
+| Black–Litterman | 7.7% | 11.6% | 0.49 | −21.2% | **−0.1%** | 0.195 |
+| 60/40 | 8.4% | 9.9% | 0.65 | −21.6% | −0.5% | — |
+| 1/N (universe) | 9.3% | 10.8% | 0.68 | −23.4% | −0.2% | 0.053 |
+| 100% QQQ | 18.0% | 18.8% | 0.85 | −35.5% | −0.2% | 1.0 |
+
+*(Out-of-sample 2015-08 → 2026-06, monthly rebalancing; Sharpe in excess of realized T-bills.)*
+
+Three findings stand out (full discussion in Section 17 of the main notebook):
+
+1. **Michaud does what it promises**: same Sharpe as classical Markowitz with one-third
+   less concentration (HHI 0.123 vs 0.185) and lower turnover.
+2. **Black–Litterman was the only construction that actually protected in the crisis**
+   (flat in June 2026, −1.8% daily drawdown vs −5.8% for Markowitz), at the cost of the
+   worst full-sample Sharpe — constant cautionary views are an insurance premium.
+3. **The crisis hit optimized portfolios through an unexpected channel**: at the last
+   pre-crisis rebalance Markowitz held only ~14% AI but 41% gold+commodities (trailing
+   winners), and the hawkish-Fed shock that triggered the chip rout crashed those too —
+   estimation-driven momentum concentration, not the AI theme itself, was the real risk.
+
+---
+
 ## Reproducibility
 
 ```powershell
@@ -137,5 +164,5 @@ jupyter notebook   # run AI_Concentration_Dynamic_Allocation.ipynb top to bottom
 
 ## Academic information
 
-**Course:** Financial Markets Analytics — Prof. G. Forte
+**Course:** Financial Markets Analytics 
 **Academic year:** 2025/2026

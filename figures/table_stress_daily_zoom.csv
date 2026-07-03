@@ -1,0 +1,11 @@
+Window,Strategy,Cum. Return,Max Drawdown (daily)
+February 2026 preview,Markowitz,0.0053,-0.0151
+February 2026 preview,Michaud,0.0049,-0.0137
+February 2026 preview,Black-Litterman,0.0031,-0.0103
+February 2026 preview,1/N (universe index),0.0172,-0.0132
+February 2026 preview,60/40,-0.0022,-0.0128
+June 2026 chip rout,Markowitz,-0.0445,-0.0577
+June 2026 chip rout,Michaud,-0.0385,-0.0518
+June 2026 chip rout,Black-Litterman,0.002,-0.018
+June 2026 chip rout,1/N (universe index),0.0015,-0.0449
+June 2026 chip rout,60/40,-0.0049,-0.0294
