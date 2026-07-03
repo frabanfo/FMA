@@ -1,54 +1,141 @@
-# Dynamic Asset Allocation — Financial Markets Analytics 2026 (Variante B)
+# Dynamic Asset Allocation under AI-Concentration Risk
 
-Backtest *walk-forward* out-of-sample di strategie di asset allocation dinamica
-su un universo ETF multi-asset, con confronto tra Markowitz classico
-(max-Sharpe, min-variance), resampling di Michaud e benchmark naïve (1/N, 60/40).
+### Markowitz vs Michaud Resampling vs Black–Litterman, evaluated through the 2026 AI/semiconductor crisis
 
-## Struttura
+**Financial Markets Analytics 2025/2026 — Final Project, Variant B (Dynamic Asset Allocation)**
 
-```
-dynamic_asset_allocation/
-├── config.py          # TUTTE le scelte: universo, periodo, parametri, seed
-├── data_loader.py     # download (yfinance/FRED), pulizia, rendimenti mensili, cache
-├── estimators.py      # μ (media storica), Σ (sample / Ledoit-Wolf)        
-├── optimizers.py      # min-var, max-Sharpe (scipy), resampling Michaud    
-├── backtest.py        # motore walk-forward (cuore del progetto)           
-├── benchmarks.py      # 1/N, 60/40                                          
-├── metrics.py         # equity, vol, max drawdown, Sharpe, Calmar, turnover [to do]
-├── plotting.py        # grafici                                             [to do]
-├── notebooks/         # 01_data, 02_optimizers_demo, 03_results (presentazione)
-├── tests/             # sanity test, incl. verifica no-look-ahead
-├── docs/              # guida teorica e spiegazione del progetto
-├── data/cache/        # dati scaricati (parquet) — riproducibilità
-├── results/           # figure e tabelle prodotte
+This project designs, implements and evaluates **out-of-sample** a set of dynamic asset
+allocation strategies on a 19-ETF multi-asset universe, with a deliberate focus on the
+defining market theme of 2025–2026: the historical concentration of equity markets in
+AI/mega-cap technology and its semiconductor supply chain — and what happened when that
+concentration was stress-tested by the **2026 AI/semiconductor crisis**.
+
+---
+
+## Research question
+
+> Does resampled (Michaud) or Black–Litterman portfolio construction reduce unwanted
+> concentration in AI/tech exposure relative to classical Markowitz, and does that
+> translate into better risk-adjusted, out-of-sample performance through the 2026
+> AI/semiconductor crisis?
+
+---
+
+## The 2026 AI/semiconductor crisis (the empirical laboratory)
+
+Reconstructed from primary sources in Section 4 of the main notebook:
+
+- **5 Feb 2026 — preview episode.** Hyperscaler capex fears (Amazon guiding to >$200bn of
+  2026 capex, Alphabet/Meta nearly doubling theirs); Nasdaq −1.59%.
+- **Early June 2026.** Cautious AI-chip outlook from Broadcom; hawkish Fed repricing under
+  the new chair (+50bp of hikes priced by December). 5 Jun: Nasdaq 100 −5%, worst day of
+  the year.
+- **23–26 June 2026 — global chip rout.** Kospi −10% in a session (circuit breaker;
+  Samsung and SK Hynix, ≈half the index, both −12%), Micron −13%, Nasdaq −2.2% then ~−4%;
+  semiconductor stocks lose **more than $1.3 trillion** of market value — followed by a
+  sharp partial rebound on Micron's blowout earnings (25 Jun: Micron +16%, Kospi +5%).
+
+The crisis provides two dated stress windows for evaluation and the economic grounding
+for the three Black–Litterman views (AI valuations vs rates, memory-chain weakness,
+short-vs-long duration).
+
+---
+
+## Repository structure
+
+```text
+.
+├── AI_Concentration_Dynamic_Allocation.ipynb   # main notebook (executed, with outputs)
+├── 02_sensitivity_analysis.ipynb                # robustness checks (executed)
+├── data/cache/                                  # frozen parquet price panel (reproducibility)
+├── figures/                                     # exported figures and CSV tables
+├── docs/                                        # theory notes
+├── archive/                                     # earlier modular prototype (superseded)
+├── README.md
 └── requirements.txt
 ```
 
-## Setup (Windows / PowerShell)
+---
+
+## ETF universe (19 names, 6 buckets)
+
+| Bucket | ETFs |
+|---|---|
+| Broad equity | SPY, IWM, EFA, EEM |
+| **AI/Tech cluster** | **QQQ, SMH, XLK, EWT (Taiwan), EWY (Korea)** |
+| Government bonds | SHY, IEF, TLT, TIP |
+| Credit | LQD, HYG |
+| Real assets | GLD, DBC, VNQ |
+| Cash proxy | BIL |
+
+The AI/Tech cluster includes direct exposure to the Taiwanese and Korean semiconductor
+supply chain (`EWT`, `EWY`) — the epicentre of the June 2026 rout. Daily prices
+2010-07-01 → 2026-06-30 (~16 years, above the 15-year minimum) from Yahoo Finance via
+`yfinance`, frozen to parquet after the first download.
+
+---
+
+## Methodology
+
+All strategies share the same **rolling, walk-forward, no-look-ahead backtest engine**:
+at each month-end, μ and Σ are estimated on the trailing 60 months (Ledoit–Wolf
+shrinkage), weights are optimized (long-only, no leverage, 30% single-asset cap) and held
+until the next rebalance. An explicit sanity check verifies that no future information
+enters any rebalance.
+
+1. **Strategy A — classical Markowitz**: rolling max-Sharpe (SLSQP).
+2. **Strategy B — Michaud resampled frontier**: 300 Monte Carlo re-estimations per
+   rebalance, averaged weights (fixed seed).
+3. **Strategy C — Black–Litterman** with three crisis-grounded, constant views:
+   AI cluster underperforms broad equity (−2%/yr), memory supply chain underperforms US
+   mega-cap tech (−3%/yr), short duration outperforms long duration (+1%/yr).
+   He–Litterman Ω, τ = 0.03; calibration sensitivity in the companion notebook.
+4. **Benchmarks**: 60/40 (SPY/IEF), 1/N across the universe (the "universe index"
+   required by the assignment), and a passive 100% QQQ reference.
+
+**Evaluation**: equity curves, annualized volatility, Sharpe (in excess of realized
+T-bills), Sortino, max drawdown, Calmar, turnover — plus **concentration diagnostics**
+(AI-cluster weight, portfolio HHI) and a **stress-window deep dive** on February and
+June 2026 at monthly *and* daily resolution.
+
+**Robustness** (`02_sensitivity_analysis.ipynb`): estimation window 36/60/84m, sample vs
+Ledoit–Wolf covariance, weight cap 20%/30%/uncapped, monthly vs quarterly rebalancing,
+BL τ × view-magnitude grid, and an explicit AI-bucket budget constraint (≤25%) as the
+direct alternative to robust estimation.
+
+---
+
+## Reproducibility
 
 ```powershell
-# 1. Crea l'ambiente virtuale (Python 3.12)
 py -3.12 -m venv .venv
-
-# 2. Attivalo
 .\.venv\Scripts\Activate.ps1
-
-# 3. Installa le dipendenze
 pip install -r requirements.txt
+jupyter notebook   # run AI_Concentration_Dynamic_Allocation.ipynb top to bottom
 ```
 
-## Uso
+- The first run downloads prices and freezes them to `data/cache/prices_daily.parquet`
+  (fixed sample end date 2026-06-30); later runs are fully offline and deterministic.
+- Single seed (42) for the Michaud Monte Carlo.
+- Every subjective parameter (window, cap, τ, views, …) is set once, in the open, next to
+  the markdown cell that justifies it.
 
-```powershell
-# Scarica e prepara i dati (crea la cache in data/cache/)
-python data_loader.py
-```
+---
 
-Stato attuale: **dati pronti e verificati** — 16 ETF, 222 mesi
-(gen 2008 → giu 2026). I moduli di ottimizzazione e backtest sono in sviluppo
-secondo il piano a milestone.
+## References
 
-## Riproducibilità
-- Seed unico in `config.py` (`SEED = 42`), usato dal resampling Monte Carlo.
-- Dati congelati in cache parquet: stessi input → stessi output.
-- Tutte le scelte soggettive centralizzate in `config.py`.
+- Markowitz (1952), *Portfolio Selection*, Journal of Finance
+- Michaud (1989), *The Markowitz Optimization Enigma: Is Optimized Optimal?*
+- Michaud & Michaud (2008), *Estimation Error and Portfolio Optimization: A Resampling Solution*
+- Idzorek (2005), *A Step-by-step Guide to the Black–Litterman Model*
+- He & Litterman (1999), *The Intuition Behind Black–Litterman Model Portfolios*
+- Ledoit & Wolf (2004), *A Well-Conditioned Estimator for Large-Dimensional Covariance Matrices*
+- Crisis sources: CNN Business, CNBC, NPR, Washington Post, Yahoo Finance, Investing.com
+  (full links in Section 4 of the main notebook)
+
+---
+
+## Academic information
+
+**Course:** Financial Markets Analytics — Prof. G. Forte
+**Academic year:** 2025/2026
